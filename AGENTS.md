@@ -37,3 +37,17 @@ skills:
 Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
  
 <!-- END:nextjs-agent-rules -->
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`GELLIFY/airon_maiden`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default label vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context repo — `CONTEXT.md` + `docs/adr/` alla root. See `docs/agents/domain.md`.
