@@ -1,0 +1,52 @@
+name: Cleanup Preview
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  pull_request:
+    types:
+      - closed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  delete_neon_branch:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    name: Delete Neon Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get branch name
+        id: branch_name
+        uses: tj-actions/branch-names@dde14ac574a8b9b1cedc59a1cf312788af43d8d8 # v8
+
+      - name: Delete Neon Branch
+        continue-on-error: true
+        uses: neondatabase/delete-branch-action@c2005bb7d7caeba12ba3ec63857e9c9f9a4d695a # v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: preview/pr-${{ github.event.number }}-${{ steps.branch_name.outputs.current_branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+  cleanup_preview:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    name: Cleanup Vercel Preview
+    needs: delete_neon_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Get branch name
+        id: branch_name
+        uses: tj-actions/branch-names@dde14ac574a8b9b1cedc59a1cf312788af43d8d8 # v8
+      - name: Delete Vercel Environment Information
+        continue-on-error: true
+        run: pnpm dlx vercel env rm DATABASE_URL preview ${{ steps.branch_name.outputs.current_branch }} --yes --token=${{ secrets.VERCEL_TOKEN }}
