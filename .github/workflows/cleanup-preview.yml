@@ -1,0 +1,47 @@
+name: Cleanup Preview
+
+on:
+  pull_request:
+    types:
+      - closed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  delete_neon_branch:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    name: Delete Neon Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get branch name
+        id: branch_name
+        uses: tj-actions/branch-names@dde14ac574a8b9b1cedc59a1cf312788af43d8d8 # v8
+
+      - name: Delete Neon Branch
+        continue-on-error: true
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: preview/pr-${{ github.event.number }}-${{ steps.branch_name.outputs.current_branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+
+  cleanup_preview:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
+    name: Cleanup Vercel Preview
+    needs: delete_neon_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Install dependencies & tooling
+        uses: ./.github/workflows/setup
+
+      - name: Cleanup Preview Deployment
+        id: cleanup_vercel
+        uses: ./.github/workflows/cd/vercel/cleanup-preview
+        with:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
