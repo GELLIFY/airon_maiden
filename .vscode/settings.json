@@ -1,0 +1,29 @@
+{
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome",
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome",
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+  },
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "*.css": "tailwindcss",
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "next/router.d.ts",
+    "next/dist/client/router.d.ts",
+    "@base-ui/react/**", // exclude auto imports from @base-ui/react
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+}
