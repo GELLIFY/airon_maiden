@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source not "../.claude";
+@source not "../.agents";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

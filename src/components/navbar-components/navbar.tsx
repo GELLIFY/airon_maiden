@@ -1,4 +1,4 @@
-import { FileTextIcon, ListTodoIcon } from "lucide-react";
+import { FileTextIcon, LayoutDashboardIcon, ListTodoIcon } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/navbar-components/logo";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ import ThemeToggle from "./theme-toggle";
 
 // Navigation links with icons for desktop icon-only navigation
 const navigationLinks = [
+  { href: "/dashboard", icon: LayoutDashboardIcon, label: "Dashboard" },
   { href: "/todo", icon: ListTodoIcon, label: "Todos" },
   { href: "#", icon: FileTextIcon, label: "Documentation" },
 ];

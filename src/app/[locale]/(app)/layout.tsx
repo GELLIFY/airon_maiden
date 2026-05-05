@@ -1,5 +1,6 @@
-import Navbar from "@/components/navbar-components/navbar";
+import { AppShell } from "@/components/airon/app-shell";
 import { getCachedSession } from "@/libs/better-auth/get-cached-session";
+import { getQueryClient, HydrateClient, trpc } from "@/libs/trpc/server";
 
 export default async function Layout({
   children,
@@ -8,10 +9,15 @@ export default async function Layout({
 }) {
   const session = await getCachedSession();
 
+  const queryClient = getQueryClient();
+  if (session) {
+    queryClient.prefetchQuery(trpc.airon.listProjects.queryOptions());
+    queryClient.prefetchQuery(trpc.airon.listSidebarRetros.queryOptions());
+  }
+
   return (
-    <div>
-      <Navbar user={session?.user} />
-      {children}
-    </div>
+    <HydrateClient>
+      <AppShell user={session?.user}>{children}</AppShell>
+    </HydrateClient>
   );
 }
