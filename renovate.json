@@ -1,0 +1,51 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    "schedule:nonOfficeHours",
+    "customManagers:biomeVersions"
+  ],
+  "enabled": true,
+  "branchConcurrentLimit": 3,
+  "rangeStrategy": "pin",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "description": "Ignore nodejs",
+      "matchPackageNames": ["node"],
+      "matchManagers": ["pnpm"],
+      "matchDepTypes": ["engines"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Group better-auth dependencies together",
+      "matchPackageNames": ["/better-auth/"],
+      "groupName": "better-auth"
+    },
+    {
+      "description": "Group drizzle dependencies together",
+      "matchPackageNames": ["drizzle-orm", "drizzle-kit"],
+      "groupName": "drizzle"
+    },
+    {
+      "description": "Group trpc dependencies together",
+      "matchPackageNames": ["@trpc/*"],
+      "groupName": "trpc"
+    },
+    {
+      "description": "Automerge quality related devDependencies checked by CI",
+      "matchDepTypes": ["devDependencies"],
+      "matchPackageNames": [
+        "@biomejs/biome",
+        "@types/bun",
+        "@electric-sql/pglite",
+        "@testing-library/*",
+        "@happy-dom/global-registrator"
+      ],
+      "automerge": true
+    }
+  ]
+}
