@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: "2.3.0"
+      - name: Run Biome
+        run: biome check .
+
+  typecheck:
+    name: "Typecheck"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Install dependencies & tooling
+        uses: ./.github/workflows/setup
+      - name: Run Checks
+        run: pnpm run typecheck
+
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+      - name: Install dependencies & tooling
+        uses: ./.github/workflows/setup
+      - name: Setup env
+        run: |
+          touch .env
+          echo SKIP_ENV_VALIDATION=1 >> .env
+      - name: Run Tests
+        run: pnpm test
