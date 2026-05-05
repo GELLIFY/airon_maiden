@@ -1,0 +1,74 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.13/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "src/**",
+      "!src/components/ui",
+      "public/**",
+      "drizzle.config.ts",
+      "next.config.js",
+      "postcss.config.cjs",
+      "components.json",
+      "package.json",
+      "tsconfig.json"
+    ]
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useKeyWithClickEvents": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noRestrictedImports": {
+          "options": {
+            "paths": {
+              "zod": {
+                "importNames": ["z"],
+                "message": "Use `import * as z from \"zod\"` instead of `import { z }`."
+              }
+            }
+          },
+          "level": "error"
+        }
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off",
+        "useUniqueElementIds": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      }
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}
